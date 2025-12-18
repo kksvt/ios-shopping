@@ -12,7 +12,102 @@ import CoreData
 struct ios_shoppingApp: App {
     let apiURL = "http://74.91.113.214:800/"
     
-    func fetchCategories(url: String) { //returns true if at least one category was inserted
+    func fetchProducts(url: String) {
+        let context = persistenceController.container.viewContext
+        let config = URLSessionConfiguration.default
+        let finalURL = url + "products"
+        
+        let request = URLRequest(url: URL(string: finalURL)!)
+        let session = URLSession(configuration: config)
+        let dispatch = DispatchGroup()
+        
+        let task = session.dataTask(with: request, completionHandler: {(data, response, err) in
+            guard err == nil else {
+                print("Error: \(err)")
+                dispatch.leave()
+                return
+            }
+            
+            guard data != nil else {
+                print("Query returns no data.")
+                dispatch.leave()
+                return
+            }	
+            
+            do {
+                let readableData = try JSONSerialization.jsonObject(with: data!)
+                
+                guard let array = readableData as? [[String: Any]] else {
+                    print("Couldn't convert to array data")
+                    return
+                }
+                
+                let categories = (try? context.fetch(Category.fetchRequest())) ?? []
+                
+                for fetchedProd in array {
+                    let name = fetchedProd["name"] as? String
+                    let quantity = fetchedProd["quantity"] as? Int16
+                    let note = fetchedProd["note"] as? String
+                    let checkIfExists: NSFetchRequest<Product> = Product.fetchRequest()
+                    //todo: improve upon this. ideally, we'd store some ids, but
+                    //coredata doesnt seem to have an autoincrement option?
+                    checkIfExists.predicate = NSPredicate(format: "productName == %@ AND quantity == %@ AND note == %@", name!, NSNumber(value: quantity!), note!)
+                    
+                    let exists = try context.fetch(checkIfExists).first != nil
+                    if exists {
+                        print("Product \(name!) with quantity \(quantity!) already exists")
+                        continue
+                    }
+                    
+                    let bought = fetchedProd["isBought"] as? Bool
+                    let categoryString = fetchedProd["category"] as? String
+                
+                    guard let categoryMatch = categories.first(where: { category in
+                        category.categoryName == categoryString
+                    }) else {
+                        print("Couldn't match \(categoryString) to any categories. Skipping.")
+                        continue
+                    }
+                    
+                    let product = Product(context: context)
+                    product.productName = name
+                    product.quantity = quantity!
+                    product.note = note
+                    product.isBought = bought!
+                    product.relationship = categoryMatch
+                    
+                    print("Adding product \(name!) with quantity \(quantity!)")
+
+                   // let category = Category(context: context)
+                   // category.categoryName = name!
+                }
+                
+                if context.hasChanges {
+                    do {
+                        try context.save()
+                    } catch {
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    }
+                }
+                dispatch.leave()
+                
+            } catch {
+                print("Error: \(error))")
+                dispatch.leave()
+                return
+            }
+            
+        })
+        
+        dispatch.enter()
+        task.resume()
+        dispatch.wait()
+        print("Fetching products has finished")
+    }
+
+    
+    func fetchCategories(url: String) {
         let context = persistenceController.container.viewContext
         let config = URLSessionConfiguration.default
         let finalURL = url + "categories"
@@ -33,7 +128,6 @@ struct ios_shoppingApp: App {
                 dispatch.leave()
                 return
             }
-        
             
             do {
                 let readableData = try JSONSerialization.jsonObject(with: data!)
@@ -54,7 +148,6 @@ struct ios_shoppingApp: App {
                         print("Category \(name!) already exists")
                         continue
                     }
-                    
 
                     let category = Category(context: context)
                     category.categoryName = name!
@@ -81,13 +174,14 @@ struct ios_shoppingApp: App {
         dispatch.enter()
         task.resume()
         dispatch.wait()
-        print("DONE")
+        print("Fetching categories has finished")
     }
     
     let persistenceController = PersistenceController.shared
 
     init() {
         fetchCategories(url: apiURL)
+        fetchProducts(url: apiURL)
     }
     
     var body: some Scene {
