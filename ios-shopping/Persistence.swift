@@ -79,8 +79,9 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+        //homework 4: this is now fetched from a server
         //add default categories
-        let count = (try? container.viewContext.count(for: Category.fetchRequest())) ?? 0
+        /*let count = (try? container.viewContext.count(for: Category.fetchRequest())) ?? 0
         if count == 0 {
             let hardcodedCategories = ["Vegetables", "Dairy", "Beverages", "Meat", "Fruits", "Electronics", "Hygiene"]
             for category in hardcodedCategories {
@@ -93,6 +94,6 @@ struct PersistenceController {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
-        }
+        }*/
     }
 }

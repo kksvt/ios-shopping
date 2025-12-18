@@ -3,7 +3,6 @@ import CoreData
 
 struct EditOrAddView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.dismiss) private var dismiss
     
     @State var currentProduct: Product?
     @State var productName: String
