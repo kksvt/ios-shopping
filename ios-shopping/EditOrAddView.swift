@@ -104,5 +104,6 @@ struct EditOrAddView: View {
 
 #Preview {
     EditOrAddView(passedProduct: nil)
+        .environmentObject(TokenStorage())
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

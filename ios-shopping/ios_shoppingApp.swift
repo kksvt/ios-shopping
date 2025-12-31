@@ -10,12 +10,54 @@ import CoreData
 
 @main
 struct ios_shoppingApp: App {
+    @StateObject private var tokenStorage = TokenStorage()
+    @State private var isAuthorized: Bool = false
+    
     let apiURL = "http://74.91.113.214:800/"
     
-    func fetchProducts(url: String) {
+    func credentialsCheck() -> Bool {
+        let config = URLSessionConfiguration.default
+        let finalURL = apiURL + "check"
+        
+        var request = URLRequest(url: URL(string: finalURL)!)
+        
+        if let token = tokenStorage.getToken(), !token.isEmpty {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            return false
+        }
+        
+        let session = URLSession(configuration: config)
+        let dispatch = DispatchGroup()
+        
+        var status = false
+        
+        let task = session.dataTask(with: request, completionHandler: {(data, response, err) in
+            guard err == nil else {
+                dispatch.leave()
+                return
+            }
+            
+            guard let http = response as? HTTPURLResponse else {
+                dispatch.leave()
+                return
+            }
+            
+            status = (http.statusCode == 200)
+            dispatch.leave()
+            
+        })
+        
+        dispatch.enter()
+        task.resume()
+        dispatch.wait()
+        return status
+    }
+    
+    func fetchProducts() {
         let context = persistenceController.container.viewContext
         let config = URLSessionConfiguration.default
-        let finalURL = url + "products"
+        let finalURL = apiURL + "auth/products"
         
         let request = URLRequest(url: URL(string: finalURL)!)
         let session = URLSession(configuration: config)
@@ -23,7 +65,7 @@ struct ios_shoppingApp: App {
         
         let task = session.dataTask(with: request, completionHandler: {(data, response, err) in
             guard err == nil else {
-                print("Error: \(err)")
+                print("Error: \(String(describing: err))")
                 dispatch.leave()
                 return
             }
@@ -65,7 +107,7 @@ struct ios_shoppingApp: App {
                     guard let categoryMatch = categories.first(where: { category in
                         category.categoryName == categoryString
                     }) else {
-                        print("Couldn't match \(categoryString) to any categories. Skipping.")
+                        print("Couldn't match \(String(describing: categoryString)) to any categories. Skipping.")
                         continue
                     }
                     
@@ -107,10 +149,10 @@ struct ios_shoppingApp: App {
     }
 
     
-    func fetchCategories(url: String) {
+    func fetchCategories() {
         let context = persistenceController.container.viewContext
         let config = URLSessionConfiguration.default
-        let finalURL = url + "categories"
+        let finalURL = apiURL + "auth/categories"
         
         let request = URLRequest(url: URL(string: finalURL)!)
         let session = URLSession(configuration: config)
@@ -164,7 +206,7 @@ struct ios_shoppingApp: App {
                 dispatch.leave()
                 
             } catch {
-                print("Error: \(error))")
+                print("Error: \(error)")
                 dispatch.leave()
                 return
             }
@@ -180,14 +222,24 @@ struct ios_shoppingApp: App {
     let persistenceController = PersistenceController.shared
 
     init() {
-        fetchCategories(url: apiURL)
-        fetchProducts(url: apiURL)
+        _isAuthorized = State(initialValue: credentialsCheck())
+        if isAuthorized {
+            fetchCategories()
+            fetchProducts()
+        }
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            Group {
+                if isAuthorized {
+                    ContentView()
+                } else {
+                    LoginOrRegisterView(apiURL: apiURL)
+                }
+            }
+            .environmentObject(tokenStorage)
+            .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
