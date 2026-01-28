@@ -17,7 +17,7 @@ struct ios_shoppingApp: App {
     
     func credentialsCheck() -> Bool {
         let config = URLSessionConfiguration.default
-        let finalURL = apiURL + "check"
+        let finalURL = apiURL + "auth/check"
         
         var request = URLRequest(url: URL(string: finalURL)!)
         
@@ -59,7 +59,15 @@ struct ios_shoppingApp: App {
         let config = URLSessionConfiguration.default
         let finalURL = apiURL + "auth/products"
         
-        let request = URLRequest(url: URL(string: finalURL)!)
+        var request = URLRequest(url: URL(string: finalURL)!)
+        
+        if let token = tokenStorage.getToken(), !token.isEmpty {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("No token")
+            return
+        }
+        
         let session = URLSession(configuration: config)
         let dispatch = DispatchGroup()
         
@@ -154,7 +162,15 @@ struct ios_shoppingApp: App {
         let config = URLSessionConfiguration.default
         let finalURL = apiURL + "auth/categories"
         
-        let request = URLRequest(url: URL(string: finalURL)!)
+        var request = URLRequest(url: URL(string: finalURL)!)
+        
+        if let token = tokenStorage.getToken(), !token.isEmpty {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("No token")
+            return
+        }
+        
         let session = URLSession(configuration: config)
         let dispatch = DispatchGroup()
         
