@@ -13,6 +13,8 @@ struct ios_shoppingApp: App {
     @StateObject private var tokenStorage = TokenStorage()
     @State private var isAuthorized: Bool = false
     
+    //disclaimer: keep in mind that this is not supposed to be a real application
+    //safely communicating with a secure webserver. all data is sent uncrypted over http.
     let apiURL = "http://74.91.113.214:800/"
     
     func credentialsCheck() -> Bool {
