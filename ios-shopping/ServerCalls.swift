@@ -80,6 +80,81 @@ func syncProductsToServer(
     return "Sync failed (\(code))"
 }
 
+func productsFromJSON(
+    context: NSManagedObjectContext,
+    array: [[String: Any]]
+) {
+    
+    let existing: [Product]
+     do {
+         existing = try context.fetch(Product.fetchRequest())
+     } catch {
+         print("Fetch local products failed")
+         return
+     }
+
+     for p in existing {
+         //this is obviously not ideal, but we dont really have a reliable way of matching a fetched products with local products
+         //since theres no id.
+         context.delete(p)
+     }
+    
+    let categories = (try? context.fetch(Category.fetchRequest())) ?? []
+    
+    do {
+        for fetchedProd in array {
+            let name = fetchedProd["name"] as? String
+            let quantity = fetchedProd["quantity"] as? Int16
+            let note = fetchedProd["note"] as? String
+            let checkIfExists: NSFetchRequest<Product> = Product.fetchRequest()
+            //todo: improve upon this. ideally, we'd store some ids, but
+            //coredata doesnt seem to have an autoincrement option?
+            checkIfExists.predicate = NSPredicate(format: "productName == %@ AND quantity == %@ AND note == %@", name!, NSNumber(value: quantity!), note!)
+            
+            let exists = try context.fetch(checkIfExists).first != nil
+            if exists {
+                print("Product \(name!) with quantity \(quantity!) already exists")
+                continue
+            }
+            
+            let bought = fetchedProd["isBought"] as? Bool
+            let categoryString = fetchedProd["category"] as? String
+            let price = fetchedProd["price"] as? Double
+            let paid = fetchedProd["isPaid"] as? Bool
+            
+            guard let categoryMatch = categories.first(where: { category in
+                category.categoryName == categoryString
+            }) else {
+                print("Couldn't match \(String(describing: categoryString)) to any categories. Skipping.")
+                continue
+            }
+            
+            let product = Product(context: context)
+            product.productName = name
+            product.quantity = quantity!
+            product.note = note
+            product.isBought = bought!
+            product.relationship = categoryMatch
+            product.isPaid = paid!
+            product.price = price!
+            
+            print("Adding product \(name!) with quantity \(quantity!)")
+        }
+    } catch {
+        print("Error: \(error)")
+        return
+    }
+    
+    if context.hasChanges {
+        do {
+            try context.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+
 func fetchProducts(
     context: NSManagedObjectContext,
     apiURL: String,
@@ -115,72 +190,7 @@ func fetchProducts(
                 return
             }
             
-            let existing: [Product]
-             do {
-                 existing = try context.fetch(Product.fetchRequest())
-             } catch {
-                 print("Fetch local products failed")
-                 return
-             }
-
-             for p in existing {
-                 //this is obviously not ideal, but we dont really have a reliable way of matching a fetched products with local products
-                 //since theres no id.
-                 context.delete(p)
-             }
-            
-            let categories = (try? context.fetch(Category.fetchRequest())) ?? []
-            
-            for fetchedProd in array {
-                let name = fetchedProd["name"] as? String
-                let quantity = fetchedProd["quantity"] as? Int16
-                let note = fetchedProd["note"] as? String
-                let checkIfExists: NSFetchRequest<Product> = Product.fetchRequest()
-                //todo: improve upon this. ideally, we'd store some ids, but
-                //coredata doesnt seem to have an autoincrement option?
-                checkIfExists.predicate = NSPredicate(format: "productName == %@ AND quantity == %@ AND note == %@", name!, NSNumber(value: quantity!), note!)
-                
-                let exists = try context.fetch(checkIfExists).first != nil
-                if exists {
-                    print("Product \(name!) with quantity \(quantity!) already exists")
-                    continue
-                }
-                
-                let bought = fetchedProd["isBought"] as? Bool
-                let categoryString = fetchedProd["category"] as? String
-                let price = fetchedProd["price"] as? Double
-                let paid = fetchedProd["isPaid"] as? Bool
-            
-                guard let categoryMatch = categories.first(where: { category in
-                    category.categoryName == categoryString
-                }) else {
-                    print("Couldn't match \(String(describing: categoryString)) to any categories. Skipping.")
-                    continue
-                }
-                
-                let product = Product(context: context)
-                product.productName = name
-                product.quantity = quantity!
-                product.note = note
-                product.isBought = bought!
-                product.relationship = categoryMatch
-                product.isPaid = paid!
-                product.price = price!
-                
-                print("Adding product \(name!) with quantity \(quantity!)")
-
-               // let category = Category(context: context)
-               // category.categoryName = name!
-            }
-            
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch {
-                    let nsError = error as NSError
-                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                }
-            }
+            productsFromJSON(context: context, array: array)
             dispatch.leave()
             
         } catch {

@@ -92,7 +92,9 @@ struct PaymentView: View {
 
         if let data = responseData,
            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-           let msg = obj["message"] as? String {
+           let msg = obj["message"] as? String,
+           let updatedProducts = obj["products"] as? [[String: Any]] {
+            productsFromJSON(context: viewContext, array: updatedProducts)
             srvMessage = "Server: \(msg) (\(code))"
         } else {
             srvMessage = "Payment failed (\(code))."
