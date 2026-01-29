@@ -103,6 +103,13 @@ struct LoginOrRegisterView: View {
 
         tokenStorage.setToken(token: token)
         srvMessage = "Success."
+        
+        if let token = tokenStorage.getToken(), !token.isEmpty {
+            let context = PersistenceController.shared.container.viewContext
+            fetchCategories(context: context, apiURL: apiURL, token: token)
+            fetchProducts(context: context, apiURL: apiURL, token: token)
+        }
+        
         gotoContent = true
     }
 
@@ -145,7 +152,7 @@ struct LoginOrRegisterView: View {
             }
             .navigationTitle(isRegister ? "Register" : "Login")
             .navigationDestination(isPresented: $gotoContent) {
-                    ContentView()
+                ContentView(apiURL: apiURL)
             }
         }
     }
