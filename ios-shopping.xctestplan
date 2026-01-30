@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "4C767F46-7AC1-4278-8D1F-B66E0B60E6A3",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ios-shopping.xcodeproj",
+      "identifier" : "D9A1E7E82EEABB75006B9787",
+      "name" : "ios-shopping"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:ios-shopping.xcodeproj",
+        "identifier" : "D93E9A512F2C08FD00A66C8D",
+        "name" : "ios-shoppingTests"
+      }
+    }
+  ],
+  "version" : 1
+}

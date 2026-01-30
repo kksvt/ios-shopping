@@ -6,7 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		D93E9A562F2C08FD00A66C8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9A1E7E12EEABB75006B9787 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D9A1E7E82EEABB75006B9787;
+			remoteInfo = "ios-shopping";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		D93E9A522F2C08FD00A66C8D /* ios-shoppingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-shoppingTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93E9A772F2C287400A66C8D /* ios-shopping.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ios-shopping.xctestplan"; sourceTree = "<group>"; };
 		D9A1E7E92EEABB75006B9787 /* ios-shopping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-shopping.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -21,6 +33,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		D93E9A532F2C08FD00A66C8D /* ios-shoppingTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "ios-shoppingTests";
+			sourceTree = "<group>";
+		};
 		D9A1E7EB2EEABB75006B9787 /* ios-shopping */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -32,6 +49,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D93E9A4F2F2C08FD00A66C8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D9A1E7E62EEABB75006B9787 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -45,7 +69,9 @@
 		D9A1E7E02EEABB75006B9787 = {
 			isa = PBXGroup;
 			children = (
+				D93E9A772F2C287400A66C8D /* ios-shopping.xctestplan */,
 				D9A1E7EB2EEABB75006B9787 /* ios-shopping */,
+				D93E9A532F2C08FD00A66C8D /* ios-shoppingTests */,
 				D9A1E7EA2EEABB75006B9787 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				D9A1E7E92EEABB75006B9787 /* ios-shopping.app */,
+				D93E9A522F2C08FD00A66C8D /* ios-shoppingTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,6 +88,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D93E9A512F2C08FD00A66C8D /* ios-shoppingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D93E9A5A2F2C08FD00A66C8D /* Build configuration list for PBXNativeTarget "ios-shoppingTests" */;
+			buildPhases = (
+				D93E9A4E2F2C08FD00A66C8D /* Sources */,
+				D93E9A4F2F2C08FD00A66C8D /* Frameworks */,
+				D93E9A502F2C08FD00A66C8D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D93E9A572F2C08FD00A66C8D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D93E9A532F2C08FD00A66C8D /* ios-shoppingTests */,
+			);
+			name = "ios-shoppingTests";
+			packageProductDependencies = (
+			);
+			productName = "ios-shoppingTests";
+			productReference = D93E9A522F2C08FD00A66C8D /* ios-shoppingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D9A1E7E82EEABB75006B9787 /* ios-shopping */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D9A1E7FC2EEABB77006B9787 /* Build configuration list for PBXNativeTarget "ios-shopping" */;
@@ -93,6 +143,10 @@
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					D93E9A512F2C08FD00A66C8D = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = D9A1E7E82EEABB75006B9787;
+					};
 					D9A1E7E82EEABB75006B9787 = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -113,11 +167,19 @@
 			projectRoot = "";
 			targets = (
 				D9A1E7E82EEABB75006B9787 /* ios-shopping */,
+				D93E9A512F2C08FD00A66C8D /* ios-shoppingTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D93E9A502F2C08FD00A66C8D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D9A1E7E72EEABB75006B9787 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +190,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D93E9A4E2F2C08FD00A66C8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D9A1E7E52EEABB75006B9787 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,7 +206,49 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		D93E9A572F2C08FD00A66C8D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D9A1E7E82EEABB75006B9787 /* ios-shopping */;
+			targetProxy = D93E9A562F2C08FD00A66C8D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		D93E9A582F2C08FD00A66C8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ios.programming.ios-shoppingTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-shopping.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ios-shopping";
+			};
+			name = Debug;
+		};
+		D93E9A592F2C08FD00A66C8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ios.programming.ios-shoppingTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-shopping.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ios-shopping";
+			};
+			name = Release;
+		};
 		D9A1E7FA2EEABB77006B9787 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -318,6 +429,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D93E9A5A2F2C08FD00A66C8D /* Build configuration list for PBXNativeTarget "ios-shoppingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D93E9A582F2C08FD00A66C8D /* Debug */,
+				D93E9A592F2C08FD00A66C8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D9A1E7E42EEABB75006B9787 /* Build configuration list for PBXProject "ios-shopping" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
